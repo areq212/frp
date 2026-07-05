@@ -1,6 +1,6 @@
 <template>
-  <!-- XTCP Options -->
-  <ConfigSection title="XTCP Options" collapsible :readonly="readonly"
+  <!-- P2P (XTCP/XUDP) Options -->
+  <ConfigSection :title="form.type === 'xudp' ? 'XUDP Options' : 'XTCP Options'" collapsible :readonly="readonly"
     :has-value="form.protocol !== 'quic' || form.keepTunnelOpen || form.maxRetriesAnHour != null || form.minRetryInterval != null || !!form.fallbackTo || form.fallbackTimeoutMs != null">
     <ConfigField label="Protocol" type="select" v-model="form.protocol"
       :options="[{ label: 'QUIC', value: 'quic' }, { label: 'KCP', value: 'kcp' }]" :readonly="readonly" />
@@ -9,7 +9,7 @@
       <ConfigField label="Max Retries per Hour" type="number" v-model="form.maxRetriesAnHour" :min="0" :readonly="readonly" />
       <ConfigField label="Min Retry Interval (s)" type="number" v-model="form.minRetryInterval" :min="0" :readonly="readonly" />
     </div>
-    <div class="field-row two-col">
+    <div v-if="form.type === 'xtcp'" class="field-row two-col">
       <ConfigField label="Fallback To" type="text" v-model="form.fallbackTo" placeholder="Fallback visitor name" :readonly="readonly" />
       <ConfigField label="Fallback Timeout (ms)" type="number" v-model="form.fallbackTimeoutMs" :min="0" :readonly="readonly" />
     </div>

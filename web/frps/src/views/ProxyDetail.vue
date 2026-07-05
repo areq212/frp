@@ -325,6 +325,10 @@ const proxyIconConfig = computed(() => {
       icon: Connection,
       gradient: 'linear-gradient(135deg, #ec4899 0%, #db2777 100%)',
     },
+    xudp: {
+      icon: Connection,
+      gradient: 'linear-gradient(135deg, #ec4899 0%, #db2777 100%)',
+    },
   }
   return (
     configs[type] || {

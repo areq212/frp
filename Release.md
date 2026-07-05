@@ -1,5 +1,6 @@
 ## Features
 
+* Added a new `xudp` proxy type for P2P UDP forwarding over NAT hole-punched tunnels, working like `xtcp` but exposing a local UDP service. Visitors authenticate with the proxy's `secretKey`.
 * Added dashboard API v2 pagination endpoints for users, clients, and proxies.
 * The frps dashboard Clients and Proxies pages now use API v2 pagination and server-side search, including proxy type filtering and searchable proxy spec fields such as remote ports, custom domains, and subdomains.
 

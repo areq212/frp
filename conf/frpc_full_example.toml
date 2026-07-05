@@ -413,6 +413,17 @@ allowUsers = ["user1", "user2"]
 disableAssistedAddrs = false
 
 [[proxies]]
+name = "p2p_udp"
+type = "xudp"
+# secretKey is used for authentication for visitors
+secretKey = "abcdefg"
+localIP = "127.0.0.1"
+localPort = 53
+# If not empty, only visitors from specified users can connect.
+# Otherwise, visitors from same user can connect. '*' means allow all users.
+allowUsers = ["user1", "user2"]
+
+[[proxies]]
 name = "vnet-server"
 type = "stcp"
 secretKey = "your-secret-key"
@@ -457,6 +468,21 @@ minRetryInterval = 90
 # When enabled, only STUN-discovered public addresses will be used.
 # Default: false
 disableAssistedAddrs = false
+
+[[visitors]]
+name = "p2p_udp_visitor"
+type = "xudp"
+# if the server user is not set, it defaults to the current user
+serverUser = "user1"
+serverName = "p2p_udp"
+secretKey = "abcdefg"
+bindAddr = "127.0.0.1"
+bindPort = 9002
+# when automatic tunnel persistence is required, set it to true
+keepTunnelOpen = false
+# effective when keepTunnelOpen is set to true, the number of attempts to punch through per hour
+maxRetriesAnHour = 8
+minRetryInterval = 90
 
 [[visitors]]
 name = "vnet-visitor"

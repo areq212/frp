@@ -11,6 +11,7 @@ export interface ProxyDefinition {
   stcp?: Record<string, any>
   sudp?: Record<string, any>
   xtcp?: Record<string, any>
+  xudp?: Record<string, any>
 }
 
 export interface VisitorDefinition {
@@ -19,6 +20,7 @@ export interface VisitorDefinition {
   stcp?: Record<string, any>
   sudp?: Record<string, any>
   xtcp?: Record<string, any>
+  xudp?: Record<string, any>
 }
 
 export interface ProxyListResp {

@@ -14,6 +14,7 @@ type VisitorDefinition struct {
 	STCP *v1.STCPVisitorConfig `json:"stcp,omitempty"`
 	SUDP *v1.SUDPVisitorConfig `json:"sudp,omitempty"`
 	XTCP *v1.XTCPVisitorConfig `json:"xtcp,omitempty"`
+	XUDP *v1.XUDPVisitorConfig `json:"xudp,omitempty"`
 }
 
 func (p *VisitorDefinition) Validate(pathName string, isUpdate bool) error {
@@ -67,6 +68,8 @@ func VisitorDefinitionFromConfigurer(cfg v1.VisitorConfigurer) (VisitorDefinitio
 		payload.SUDP = c
 	case *v1.XTCPVisitorConfig:
 		payload.XTCP = c
+	case *v1.XUDPVisitorConfig:
+		payload.XUDP = c
 	default:
 		return VisitorDefinition{}, fmt.Errorf("unsupported visitor configurer type %T", cfg)
 	}
@@ -94,12 +97,17 @@ func (p *VisitorDefinition) activeBlock() (v1.VisitorConfigurer, string, int) {
 		block = p.XTCP
 		blockType = "xtcp"
 	}
+	if p.XUDP != nil {
+		count++
+		block = p.XUDP
+		blockType = "xudp"
+	}
 	return block, blockType, count
 }
 
 func IsVisitorType(typ string) bool {
 	switch typ {
-	case "stcp", "sudp", "xtcp":
+	case "stcp", "sudp", "xtcp", "xudp":
 		return true
 	default:
 		return false

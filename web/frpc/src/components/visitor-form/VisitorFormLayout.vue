@@ -5,7 +5,7 @@
     </ConfigSection>
     <VisitorConnectionSection v-model="form" :readonly="readonly" />
     <VisitorTransportSection v-model="form" :readonly="readonly" />
-    <VisitorXtcpSection v-if="form.type === 'xtcp'" v-model="form" :readonly="readonly" />
+    <VisitorP2PSection v-if="form.type === 'xtcp' || form.type === 'xudp'" v-model="form" :readonly="readonly" />
   </div>
 </template>
 
@@ -16,7 +16,7 @@ import ConfigSection from '../ConfigSection.vue'
 import VisitorBaseSection from './VisitorBaseSection.vue'
 import VisitorConnectionSection from './VisitorConnectionSection.vue'
 import VisitorTransportSection from './VisitorTransportSection.vue'
-import VisitorXtcpSection from './VisitorXtcpSection.vue'
+import VisitorP2PSection from './VisitorP2PSection.vue'
 
 const props = withDefaults(defineProps<{
   modelValue: VisitorFormData

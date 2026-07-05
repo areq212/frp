@@ -46,6 +46,7 @@ var apiV2ProxyTypes = []string{
 	string(v1.ProxyTypeSTCP),
 	string(v1.ProxyTypeXTCP),
 	string(v1.ProxyTypeSUDP),
+	string(v1.ProxyTypeXUDP),
 }
 
 // /api/v2/users
@@ -284,7 +285,7 @@ func parseV2ProxyTypeFilter(raw string) (string, error) {
 	if slices.Contains(apiV2ProxyTypes, proxyType) {
 		return proxyType, nil
 	}
-	return "", httppkg.NewError(http.StatusBadRequest, "type must be one of tcp, udp, http, https, tcpmux, stcp, xtcp, sudp")
+	return "", httppkg.NewError(http.StatusBadRequest, "type must be one of tcp, udp, http, https, tcpmux, stcp, xtcp, sudp, xudp")
 }
 
 func matchV2StatusFilter(online bool, filter string) bool {

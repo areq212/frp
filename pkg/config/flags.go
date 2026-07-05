@@ -93,6 +93,9 @@ func RegisterProxyFlags(cmd *cobra.Command, c v1.ProxyConfigurer, opts ...Regist
 	case *v1.XTCPProxyConfig:
 		cmd.Flags().StringVarP(&cc.Secretkey, "sk", "", "", "secret key")
 		cmd.Flags().StringSliceVarP(&cc.AllowUsers, "allow_users", "", []string{}, "allow visitor users")
+	case *v1.XUDPProxyConfig:
+		cmd.Flags().StringVarP(&cc.Secretkey, "sk", "", "", "secret key")
+		cmd.Flags().StringSliceVarP(&cc.AllowUsers, "allow_users", "", []string{}, "allow visitor users")
 	}
 }
 

@@ -286,8 +286,8 @@ var _ = ginkgo.Describe("[Feature: Basic]", func() {
 		})
 	})
 
-	ginkgo.Describe("STCP && SUDP && XTCP", func() {
-		types := []string{"stcp", "sudp", "xtcp"}
+	ginkgo.Describe("STCP && SUDP && XTCP && XUDP", func() {
+		types := []string{"stcp", "sudp", "xtcp", "xudp"}
 		for _, t := range types {
 			proxyType := t
 			ginkgo.It(fmt.Sprintf("Expose echo server with %s", strings.ToUpper(proxyType)), func() {
@@ -311,6 +311,10 @@ var _ = ginkgo.Describe("[Feature: Basic]", func() {
 				case "xtcp":
 					localPortName = framework.TCPEchoServerPort
 					protocol = "tcp"
+					ginkgo.Skip("stun server is not stable")
+				case "xudp":
+					localPortName = framework.UDPEchoServerPort
+					protocol = "udp"
 					ginkgo.Skip("stun server is not stable")
 				}
 
@@ -346,28 +350,28 @@ var _ = ginkgo.Describe("[Feature: Basic]", func() {
 					visitorExtraConfig string
 					expectError        bool
 					deployUser2Client  bool
-					// skipXTCP is used to skip xtcp test case
-					skipXTCP bool
+					// skipNATHole is used to skip the test case for NAT hole punching types (xtcp, xudp)
+					skipNATHole bool
 				}{
 					{
 						proxyName:    "normal",
 						bindPortName: port.GenName("Normal"),
 						visitorSK:    correctSK,
-						skipXTCP:     true,
+						skipNATHole:  true,
 					},
 					{
 						proxyName:         "with-encryption",
 						bindPortName:      port.GenName("WithEncryption"),
 						visitorSK:         correctSK,
 						commonExtraConfig: "transport.useEncryption = true",
-						skipXTCP:          true,
+						skipNATHole:       true,
 					},
 					{
 						proxyName:         "with-compression",
 						bindPortName:      port.GenName("WithCompression"),
 						visitorSK:         correctSK,
 						commonExtraConfig: "transport.useCompression = true",
-						skipXTCP:          true,
+						skipNATHole:       true,
 					},
 					{
 						proxyName:    "with-encryption-and-compression",
@@ -377,7 +381,7 @@ var _ = ginkgo.Describe("[Feature: Basic]", func() {
 						transport.useEncryption = true
 						transport.useCompression = true
 						`,
-						skipXTCP: true,
+						skipNATHole: true,
 					},
 					{
 						proxyName:    "with-error-sk",
@@ -430,8 +434,8 @@ var _ = ginkgo.Describe("[Feature: Basic]", func() {
 
 				for _, test := range tests {
 					timeout := time.Second
-					if t == "xtcp" {
-						if test.skipXTCP {
+					if t == "xtcp" || t == "xudp" {
+						if test.skipNATHole {
 							continue
 						}
 						timeout = 10 * time.Second

@@ -144,14 +144,22 @@ export function formToStoreProxy(form: ProxyFormData): ProxyDefinition {
     }
   }
 
-  if (form.type === 'stcp' || form.type === 'sudp' || form.type === 'xtcp') {
+  if (
+    form.type === 'stcp' ||
+    form.type === 'sudp' ||
+    form.type === 'xtcp' ||
+    form.type === 'xudp'
+  ) {
     if (form.secretKey) block.secretKey = form.secretKey
     if (form.allowUsers.length > 0) {
       block.allowUsers = form.allowUsers.filter(Boolean)
     }
   }
 
-  if (form.type === 'xtcp' && form.natTraversalDisableAssistedAddrs) {
+  if (
+    (form.type === 'xtcp' || form.type === 'xudp') &&
+    form.natTraversalDisableAssistedAddrs
+  ) {
     block.natTraversal = {
       disableAssistedAddrs: true,
     }
@@ -190,7 +198,7 @@ export function formToStoreVisitor(form: VisitorFormData): VisitorDefinition {
     block.bindPort = form.bindPort
   }
 
-  if (form.type === 'xtcp') {
+  if (form.type === 'xtcp' || form.type === 'xudp') {
     if (form.protocol && form.protocol !== 'quic') {
       block.protocol = form.protocol
     }
@@ -203,16 +211,19 @@ export function formToStoreVisitor(form: VisitorFormData): VisitorDefinition {
     if (form.minRetryInterval != null) {
       block.minRetryInterval = form.minRetryInterval
     }
+    if (form.natTraversalDisableAssistedAddrs) {
+      block.natTraversal = {
+        disableAssistedAddrs: true,
+      }
+    }
+  }
+
+  if (form.type === 'xtcp') {
     if (form.fallbackTo) {
       block.fallbackTo = form.fallbackTo
     }
     if (form.fallbackTimeoutMs != null) {
       block.fallbackTimeoutMs = form.fallbackTimeoutMs
-    }
-    if (form.natTraversalDisableAssistedAddrs) {
-      block.natTraversal = {
-        disableAssistedAddrs: true,
-      }
     }
   }
 
@@ -248,6 +259,8 @@ function getStoreProxyBlock(config: ProxyDefinition): Record<string, any> {
       return config.sudp || {}
     case 'xtcp':
       return config.xtcp || {}
+    case 'xudp':
+      return config.xudp || {}
   }
 }
 
@@ -281,6 +294,9 @@ function withStoreProxyBlock(
     case 'xtcp':
       payload.xtcp = block
       break
+    case 'xudp':
+      payload.xudp = block
+      break
   }
   return payload
 }
@@ -293,6 +309,8 @@ function getStoreVisitorBlock(config: VisitorDefinition): Record<string, any> {
       return config.sudp || {}
     case 'xtcp':
       return config.xtcp || {}
+    case 'xudp':
+      return config.xudp || {}
   }
 }
 
@@ -310,6 +328,9 @@ function withStoreVisitorBlock(
       break
     case 'xtcp':
       payload.xtcp = block
+      break
+    case 'xudp':
+      payload.xudp = block
       break
   }
   return payload

@@ -118,6 +118,7 @@ const proxyTypes = [
   { label: 'STCP', value: 'stcp' },
   { label: 'XTCP', value: 'xtcp' },
   { label: 'SUDP', value: 'sudp' },
+  { label: 'XUDP', value: 'xudp' },
 ]
 
 const activeType = ref((route.params.type as string) || 'all')

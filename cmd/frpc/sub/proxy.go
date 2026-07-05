@@ -37,12 +37,14 @@ var proxyTypes = []v1.ProxyType{
 	v1.ProxyTypeSTCP,
 	v1.ProxyTypeSUDP,
 	v1.ProxyTypeXTCP,
+	v1.ProxyTypeXUDP,
 }
 
 var visitorTypes = []v1.VisitorType{
 	v1.VisitorTypeSTCP,
 	v1.VisitorTypeSUDP,
 	v1.VisitorTypeXTCP,
+	v1.VisitorTypeXUDP,
 }
 
 func init() {

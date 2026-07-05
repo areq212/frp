@@ -76,12 +76,14 @@ const (
 	VisitorTypeSTCP VisitorType = "stcp"
 	VisitorTypeXTCP VisitorType = "xtcp"
 	VisitorTypeSUDP VisitorType = "sudp"
+	VisitorTypeXUDP VisitorType = "xudp"
 )
 
 var visitorConfigTypeMap = map[VisitorType]reflect.Type{
 	VisitorTypeSTCP: reflect.TypeFor[STCPVisitorConfig](),
 	VisitorTypeXTCP: reflect.TypeFor[XTCPVisitorConfig](),
 	VisitorTypeSUDP: reflect.TypeFor[SUDPVisitorConfig](),
+	VisitorTypeXUDP: reflect.TypeFor[XUDPVisitorConfig](),
 }
 
 type TypedVisitorConfig struct {
@@ -164,6 +166,35 @@ func (c *XTCPVisitorConfig) Complete() {
 }
 
 func (c *XTCPVisitorConfig) Clone() VisitorConfigurer {
+	out := *c
+	out.VisitorBaseConfig = c.VisitorBaseConfig.Clone()
+	out.NatTraversal = c.NatTraversal.Clone()
+	return &out
+}
+
+var _ VisitorConfigurer = &XUDPVisitorConfig{}
+
+type XUDPVisitorConfig struct {
+	VisitorBaseConfig
+
+	Protocol         string `json:"protocol,omitempty"`
+	KeepTunnelOpen   bool   `json:"keepTunnelOpen,omitempty"`
+	MaxRetriesAnHour int    `json:"maxRetriesAnHour,omitempty"`
+	MinRetryInterval int    `json:"minRetryInterval,omitempty"`
+
+	// NatTraversal configuration for NAT traversal
+	NatTraversal *NatTraversalConfig `json:"natTraversal,omitempty"`
+}
+
+func (c *XUDPVisitorConfig) Complete() {
+	c.VisitorBaseConfig.Complete()
+
+	c.Protocol = util.EmptyOr(c.Protocol, "quic")
+	c.MaxRetriesAnHour = util.EmptyOr(c.MaxRetriesAnHour, 8)
+	c.MinRetryInterval = util.EmptyOr(c.MinRetryInterval, 90)
+}
+
+func (c *XUDPVisitorConfig) Clone() VisitorConfigurer {
 	out := *c
 	out.VisitorBaseConfig = c.VisitorBaseConfig.Clone()
 	out.NatTraversal = c.NatTraversal.Clone()
